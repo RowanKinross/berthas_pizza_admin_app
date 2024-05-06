@@ -98,7 +98,7 @@ const handleSubmit = async (event) => {
     const docRef = await addDoc(collection(db, "orders"), {
       timestamp: serverTimestamp(),
       delivery_date: deliveryOption === 'other' ? ("custom:" + customDeliveryDate) : deliveryOption,
-      account_ID: "#BERTHAS001",
+      account_ID: customerName.toUpperCase(),
       customer_name: customerName,
       pizza_ham: pizzaQuantities.Ham >= 0 ? pizzaQuantities.Ham : 0,
       pizza_MH: pizzaQuantities.MH >= 0 ? pizzaQuantities.MH : 0,
@@ -106,20 +106,6 @@ const handleSubmit = async (event) => {
       pizza_nap: pizzaQuantities.Nap >= 0 ? pizzaQuantities.Nap : 0,
       additional_notes: document.getElementById('additonalNotes').value
     });
-  
-
-  
-  //   // Clear the form fields after successful submission
-  //   setDeliveryOption("asap");
-  //   setCustomDeliveryDate("");
-  //   setPizzaQuantities({
-  //     ham: 0,
-  //     MH: 0,
-  //     marg: 0,
-  //     nap: 0
-  //   });
-  //   setValidated(false)
-  //   setAdditionalNotes("...");
     
     console.log("Document written with ID: ", docRef.id);
   } catch (e) {
