@@ -5,24 +5,8 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import dayjs from 'dayjs';
-import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, addDoc, serverTimestamp } from "firebase/firestore";
-
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  databaseURL: import.meta.env.VITE_FIREBASE_DB_URL,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-// Initialize Cloud Firestore and get a reference to the service
-const db = getFirestore(app);
-
+import { app, db } from '../firebase/firebase';
+import { addDoc, collection, serverTimestamp } from '@firebase/firestore';
 
 
 
@@ -34,6 +18,7 @@ function  NewOrder({customerName}) {
     Marg: 0,
     Nap: 0
   });
+  const [totalPizzas, setTotalPizzas] = useState(0)
   
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -44,8 +29,11 @@ function  NewOrder({customerName}) {
       ...prevState,
       [name]: parseInt(value)
     }));
+    const total = Object.values(pizzaQuantities).reduce((acc, curr) => acc + curr, 0);
+    setTotalPizzas(total)
+    }
   }
-  };
+  
   
   
   // delivery dates
@@ -81,6 +69,7 @@ function  NewOrder({customerName}) {
 
 
 
+
 //form submit
 const handleSubmit = async (event) => {
   event.preventDefault();
@@ -98,12 +87,13 @@ const handleSubmit = async (event) => {
     const docRef = await addDoc(collection(db, "orders"), {
       timestamp: serverTimestamp(),
       delivery_date: deliveryOption === 'other' ? ("custom:" + customDeliveryDate) : deliveryOption,
-      account_ID: customerName.toUpperCase(),
+      account_ID: (`#${customerName.toUpperCase()}`),
       customer_name: customerName,
       pizza_ham: pizzaQuantities.Ham >= 0 ? pizzaQuantities.Ham : 0,
       pizza_MH: pizzaQuantities.MH >= 0 ? pizzaQuantities.MH : 0,
       pizza_marg: pizzaQuantities.Marg >= 0 ? pizzaQuantities.Marg : 0,
       pizza_nap: pizzaQuantities.Nap >= 0 ? pizzaQuantities.Nap : 0,
+      pizzaTotal: totalPizzas,
       additional_notes: document.getElementById('additonalNotes').value
     });
     
@@ -148,7 +138,7 @@ return (
           <Form.Check
             type="radio"
             label={`next week (W/C ${nextWeek})`}
-            value="nextWeek"
+            value={nextWeek}
             name="deliveryDate"
             id="nextWeek"
             checked={deliveryOption === 'nextWeek'}
@@ -157,7 +147,7 @@ return (
           <Form.Check
             type="radio"
             label={`week after next (W/C ${weekAfterNext})`}
-            value="weekAfterNext"
+            value={weekAfterNext}
             name="deliveryDate"
             id="weekAfterNext"
             checked={deliveryOption === 'weekAfterNext'}
@@ -245,6 +235,7 @@ return (
         />
       </Col>
     </Form.Group>
+    <p>Total Pizzas: {totalPizzas}</p>
     
       </fieldset>
     

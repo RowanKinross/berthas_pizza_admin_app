@@ -1,0 +1,32 @@
+.inventoryContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.pizzas {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 500px;
+  height: 500px;
+  margin: 1%;
+}
+.pizzaImg {
+  width: 25%;
+  max-width: 25%;
+  margin: 3%;
+}
+
+#pizzasHam {
+  background-color: var(--Ham);
+}
+#pizzasMH {
+  background-color: var(--MH);
+}
+#pizzasNap {
+  background-color: var(--Nap);
+}
+#pizzasMarg {
+  background-color: var(--Marg);
+}
