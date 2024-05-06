@@ -1,0 +1,56 @@
+:root {
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --pale: #fdfdfd;
+  --dark: #1a1a1a;
+  --bertha: #eee510;
+  
+
+  background-color: var(--dark);
+  color: var(--pale);
+}
+
+*{
+  font-family: inherit;
+  border-radius: 10px;
+}
+
+a {
+  font-weight: 500;
+  text-decoration: inherit;
+}
+
+body {
+  background-color: inherit;
+  margin: 10px;
+  place-items: center;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border: none;
+  padding: 0.6em 1.2em;
+  margin: 3px;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: var(--pale);
+  color: var(--dark);
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+}
+
+button:hover {
+  box-shadow: 0 0 20px var(--bertha);
+}
