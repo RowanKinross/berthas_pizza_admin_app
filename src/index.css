@@ -16,6 +16,11 @@
   --Nap: #FCE744;
   --Marg: #88C69A;
 
+  --MHLight: rgb(233, 87, 66, 0.9);
+  --HamLight: rgb(241, 189, 204, 0.9);
+  --NapLight: rgb(252, 231, 68, 0.9);
+  --MargLight: rgb(136, 198, 154, 0.9);
+
   
 
   background-color: var(--dark);
@@ -41,6 +46,9 @@ body {
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+}
+h2 {
+  font-weight: bold;
 }
 
 button {

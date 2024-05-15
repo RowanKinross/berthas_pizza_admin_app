@@ -5,7 +5,7 @@ function OrderHistory() {
   return (
     <div className='orderHistory'>
       {/* <img src={berthasLogo} className="logo berthasLogo" alt="Bertha's Logo" /> */}
-      <h2>Order History</h2>
+      <h2>ORDER HISTORY</h2>
     </div>
   )
 }

@@ -40,15 +40,15 @@ function NavTabs({ customerName, setCustomerName }) {
           <NavLink to="/" />
           <NavLink to="/orders" className={({ isActive }) =>
             isActive ? 'nav-link active' : 'nav-link'}>
-            <h2 className="navTab">Orders</h2>
+            <h3 className="navTab">ORDERS</h3>
           </NavLink>
           <NavLink to="/inventory" className={({ isActive }) =>
             isActive ? 'nav-link active' : 'nav-link'}>
-            <h2 className="navTab">Inventory</h2>
+            <h3 className="navTab">INVENTORY</h3>
           </NavLink>
           <NavLink to="/demandSummary" className={({ isActive }) =>
             isActive ? 'nav-link active' : 'nav-link'}>
-            <h2 className="navTab">Demand Summary</h2>
+            <h3 className="navTab">DEMAND SUMMARY</h3>
           </NavLink>
         </>
       );
@@ -58,11 +58,11 @@ function NavTabs({ customerName, setCustomerName }) {
           <NavLink to="/" />
           <NavLink to="/newOrder" className={({ isActive }) =>
             isActive ? 'nav-link active' : 'nav-link'}>
-            <h2 className="navTab">New Order</h2>
+            <h3 className="navTab">NEW ORDER</h3>
           </NavLink>
           <NavLink to="/orderHistory" className={({ isActive }) =>
             isActive ? 'nav-link active' : 'nav-link'}>
-            <h2 className="navTab">Order History</h2>
+            <h3 className="navTab">ORDER HISTORY</h3>
           </NavLink>
         </>
       );

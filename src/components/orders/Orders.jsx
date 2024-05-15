@@ -8,7 +8,7 @@ import Button from 'react-bootstrap/Button';
 const querySnapshot = await getDocs(collection(db, "orders"));
 querySnapshot.forEach((doc) => {
   // doc.data() is never undefined for query doc snapshots
-  console.log(doc.id, " => ", doc.data());
+  // console.log(doc.id, " => ", doc.data());
 }
 );
 
@@ -38,7 +38,7 @@ function Orders() {
 
   return (
   <div className='orders'>
-    <h2>Orders</h2>
+    <h2>ORDERS</h2>
     <div className='ordersList'>
       <div className='orderButton'>
         <div>Account ID</div>
@@ -46,11 +46,11 @@ function Orders() {
         <div>Delivery Date</div>
       </div>
       {orders.map(order => (
-        <Button key={order.id} className='orderButton'>
+        <button key={order.id} className='orderButton button'>
           <div>{order.account_ID}</div>
           <div>{order.pizzaTotal}</div>
           <div>{order.delivery_date}</div>
-        </Button>
+        </button>
       ))}
     </div>
   </div>
