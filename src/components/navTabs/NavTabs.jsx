@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate} from 'react-router-dom';
 import './navtabs.css';
 import { app, db } from '../firebase/firebase';
 import { collection, getDocs, addDoc } from '@firebase/firestore';
@@ -15,6 +15,8 @@ function NavTabs() {
   
   const [customersArr, setCustomersArr] = useState([]);
   const [customerAddress, setCustomerAddress] = useState('');
+
+  let navigate = useNavigate()
   
   // handle inputs changing function
   const handleChange = (event) => {
@@ -120,7 +122,7 @@ function NavTabs() {
         <div className="loginContainer">
            <p className='loggedInStatement'>{userRole === "customer" ? customerName : userRole === "staff" ? "Bertha's Staff" : null}</p>
            {/* if userRole is staff, set the login statement to 'Berha's Staff', if */}
-          <Button className='button' variant="outline-warning" onClick={() => { setUserRole(null); setCustomerName(null) }}>Logout</Button>
+          <Button className='button' variant="outline-warning" onClick={() => { setUserRole(null); setCustomerName(null); navigate("/")}}>Logout</Button>
         </div>
         ) : (
         <>
