@@ -1,40 +1,71 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import './navtabs.css';
-import { Dropdown, Modal, Button } from 'react-bootstrap';
-import { render } from 'react-dom';
-import NewOrder from '../newOrder/NewOrder';
+import { app, db } from '../firebase/firebase';
+import { collection, getDocs, addDoc } from '@firebase/firestore';
+import { Dropdown, Button, Form } from 'react-bootstrap';
 
-function NavTabs({ customerName, setCustomerName }) {
+
+function NavTabs() {
   const [userRole, setUserRole] = useState(null); // Initially set to null (no user)
+  const [customerName, setCustomerName] = useState(null)
   const [dropdownOpen, setDropdownOpen] = useState(false); // dropdown menu visibility (staff or customer?)
-  const [showModal, setShowModal] = useState(false); // modal menu visibility (customer select or new customer)
+  const [modalVisible, setModalVisible] = useState(false); // modal menu visibility (customer select or new customer)
+  const [addCustomer, setAddCustomer] = useState(false); // set add customer to true to view the new customer form
   
-  const customers = ["Bertha's Pizza", "Touts", "Five Acre Farm"]
-
-
-  // Function to set the user role
-  const setUser = (role) => {
-    setUserRole(role === userRole ? null : role); // if role is equal to the user role, set it to null (to toggle login and logout)
-    setDropdownOpen(false)
-    if (!role) {
-      window.location.href = '/'; // Navigate to the home route after logout
+  const [customersArr, setCustomersArr] = useState([]);
+  const [customerAddress, setCustomerAddress] = useState('');
+  
+  // handle inputs changing function
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    if (name === "name") {
+      setCustomerName(value);
+    }if (name === "customerAddress") {
+      setCustomerAddress(value);
     }
-  };
-
-  const handleUserSelection = (selectedUser) => {
-    setCustomerName(selectedUser); // Set the selected customer's name
-    setUserRole('customer'); // Set the user role to 'customer'
-    setShowModal(false); // Close the modal
-
   }
 
+  // function to get the customer data from firebase
+  useEffect(() => {
+    const fetchCustomers = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "customers"));
+        const customersData = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        const customers = customersData.map(item => item.customer)
+        setCustomersArr(customers)
+      } catch (error) {
+        console.error("Error fetching customers:", error);
+      }
+    };
+    fetchCustomers();
+  }, []);
 
 
-
+  //function to add customer data to fiebase
+  const handleAddNewCustomer = async (event) => {
+    event.preventDefault();
+    try {
+      const docRef = await addDoc(collection(db, "customers"), {
+        account_ID: (`#${customerName.toUpperCase()}`),
+        customer: customerName,
+        address: customerAddress
+      });
+      
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  }
+  
+  
+  
   // Render navigation tabs based on user role
   const renderNavTabs = () => {
-    if (userRole === "Bertha's staff") {
+    if (userRole === "staff") {
       return (
         <>
           <NavLink to="/" />
@@ -69,21 +100,27 @@ function NavTabs({ customerName, setCustomerName }) {
     } else {
       // If user role is not set or unknown, only render the Home tab
       return (
-        <NavLink to="/" />
+          <NavLink to="/"/>
       );
     }
   };
 
+
+
+
+
+
   return (
-  <div className="navBarContainer">
+    <div className="navBarContainer">
       {/* Render navigation tabs based on user role */}
       {renderNavTabs()}
       {/* Render dropdown */}
 
       {userRole ? (
         <div className="loginContainer">
-           <p className='loggedInStatement'>{userRole === "Bertha's staff" ? "Bertha's Staff" : customerName || userRole}</p>
-          <Button className='button' variant="outline-warning" onClick={() => { setUser(null); }}>Logout</Button>
+           <p className='loggedInStatement'>{userRole === "customer" ? customerName : userRole === "staff" ? "Bertha's Staff" : null}</p>
+           {/* if userRole is staff, set the login statement to 'Berha's Staff', if */}
+          <Button className='button' variant="outline-warning" onClick={() => { setUserRole(null); setCustomerName(null) }}>Logout</Button>
         </div>
         ) : (
         <>
@@ -92,32 +129,62 @@ function NavTabs({ customerName, setCustomerName }) {
             Login
           </Dropdown.Toggle>
           <Dropdown.Menu>
-            <Dropdown.Item onClick={() => {setUserRole("customer"); setShowModal(true)}}> Customer Login </Dropdown.Item>
-            <Dropdown.Item onClick={() => setUserRole("Bertha's staff")}> Staff Login</Dropdown.Item>
+            <Dropdown.Item onClick={() => {setUserRole("customer"); setModalVisible(true)}}> Customer Login </Dropdown.Item>
+            <Dropdown.Item onClick={() => setUserRole("staff")}> Staff Login</Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
         </>
       )}
 
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Customer Login</Modal.Title>
-        </Modal.Header>
-        <Modal.Body className='loginModal'>
-          <Dropdown>
+      {modalVisible && (
+        <div className='modal'>
+          <div className='modalContent'>
+            <h3>Customer Login</h3>
+            <Dropdown>
             <Dropdown.Toggle className='button' variant="outline-warning" id="dropdown-basic">
               Select Customer
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              {customers.map((customer, index) => (
-                <Dropdown.Item key={index} onClick={() => handleUserSelection(customer)}>
+              {customersArr.map((customer, index) => (
+                <Dropdown.Item key={index} onClick={() => {setCustomerName(customer); setModalVisible(false)}}>
                   {customer}
                 </Dropdown.Item>
               ))}
+                <button className='button' onClick={() => {setAddCustomer(true); setModalVisible(false)}}>Add customer</button>
             </Dropdown.Menu>
           </Dropdown>
-        </Modal.Body>
-      </Modal>
+          </div>
+        </div>
+      )}
+
+      {addCustomer && (
+        <div className='modal'>
+        <div className='modalContent'>
+
+        <Form.Group>
+          <Form.Label>
+            <h6> Name:</h6>
+          </Form.Label>
+          <Form.Control
+            as="input"
+            placeholder=""
+            name="name"
+            onChange={handleChange}
+            />
+          <Form.Label>
+            <h6> Street Address:</h6>
+          </Form.Label>
+          <Form.Control
+            as="input"
+            placeholder=""
+            name="customerAddress"
+            onChange={handleChange}
+          />
+        </Form.Group>
+        <Button type="submit" className='button' onClick={() => {setAddCustomer(false); handleAddNewCustomer(event)}}>Submit</Button>
+        </div>
+        </div>
+      )}
 
   </div>
   );
