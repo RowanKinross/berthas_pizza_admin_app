@@ -6,9 +6,8 @@ import { collection, getDocs, addDoc } from '@firebase/firestore';
 import { Dropdown, Button, Form } from 'react-bootstrap';
 
 
-function NavTabs() {
+function NavTabs({ customerName, setCustomerName }) {
   const [userRole, setUserRole] = useState(null); // Initially set to null (no user)
-  const [customerName, setCustomerName] = useState(null)
   const [dropdownOpen, setDropdownOpen] = useState(false); // dropdown menu visibility (staff or customer?)
   const [modalVisible, setModalVisible] = useState(false); // modal menu visibility (customer select or new customer)
   const [addCustomer, setAddCustomer] = useState(false); // set add customer to true to view the new customer form
