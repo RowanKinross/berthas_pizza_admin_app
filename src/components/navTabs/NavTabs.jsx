@@ -82,6 +82,10 @@ function NavTabs({ customerName, setCustomerName }) {
             isActive ? 'nav-link active' : 'nav-link'}>
             <h3 className="navTab">DEMAND SUMMARY</h3>
           </NavLink>
+          <NavLink to="/batchCodes" className={({ isActive }) =>
+            isActive ? 'nav-link active' : 'nav-link'}>
+            <h3 className="navTab">BATCH CODES</h3>
+          </NavLink>          
         </>
       );
     } else if (userRole === "customer") {
@@ -121,7 +125,7 @@ function NavTabs({ customerName, setCustomerName }) {
         <div className="loginContainer">
            <p className='loggedInStatement'>{userRole === "customer" ? customerName : userRole === "staff" ? "Bertha's Staff" : null}</p>
            {/* if userRole is staff, set the login statement to 'Berha's Staff', if */}
-          <Button className='button' variant="outline-warning" onClick={() => { setUserRole(null); setCustomerName(null); navigate("/")}}>Logout</Button>
+          <Button className='button' variant="outline-warning" onClick={() => { setUserRole(null); setCustomerName(null); navigate("/"); location.reload();}}>Logout</Button>
         </div>
         ) : (
         <>

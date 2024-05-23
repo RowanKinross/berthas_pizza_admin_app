@@ -1,5 +1,5 @@
 import './newOrder.css'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
@@ -10,8 +10,26 @@ import { addDoc, collection, serverTimestamp } from '@firebase/firestore';
 
 
 
-
 function  NewOrder({customerName}) {
+  // // function to get the customer data from firebase
+  // useEffect(() => {
+  //  const fetchCustomers = async () => {
+  //    try {
+  //      const querySnapshot = await getDocs(collection(db, "customers"));
+  //      const customersData = querySnapshot.docs.map(doc => ({
+  //        id: doc.id,
+  //        ...doc.data()
+  //      }));
+  //      const customers = customersData.map(item => item.customer)
+  //      const customerObjIndex = customers.indexOf(customerName)
+  //      console.log(customerObjIndex)
+  //    } catch (error) {
+  //      console.error("Error fetching customers:", error);
+  //    }
+  //  };
+  //  fetchCustomers();
+  // }, []);
+
   const [pizzaQuantities, setPizzaQuantities] = useState({
     Ham: 0,
     MH: 0,

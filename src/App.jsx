@@ -10,6 +10,7 @@ import OrderHistory from './components/orderHistory/OrderHistory'
 import Orders from './components/orders/Orders'
 import Inventory from './components/inventory/Inventory'
 import DemandSummary from './components/demandSummary/demandSummary'
+import BatchCodes from './components/batchCodes/batchCodes'
 
   
 function App() {
@@ -35,6 +36,7 @@ return (
             <Route path="orders" element={<Orders />} />
             <Route path="inventory" element={<Inventory />} />
             <Route path="demandSummary" element={<DemandSummary />} />
+            <Route path="batchCodes" element={<BatchCodes/>}/>
           </Routes>
         </div>
       </div>
