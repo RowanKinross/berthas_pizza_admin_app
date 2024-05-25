@@ -1,72 +1,100 @@
-.inventoryContainer {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-}
+/* All inventory displayed flex */
+  .inventoryContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+  }
 
-.pizzas {
-  display: flex;
-  flex-direction: column;
-  width: 500px;
-  height: 500px;
-  margin: 1%;
-  background-size: contain;
-  background-repeat: no-repeat;
-}
 
-#pizzasHam {
-  background-color: var(--Ham);
-  background-image: url(./Frozen-Characters-Website-3-copy.webp);
-}
-#pizzasMH {
-  background-color: var(--MH);
-  background-image: url(./Frozen-Characters-Website-1-copy.webp);
-}
-#pizzasNap {
-  background-color: var(--Nap);
-  background-image: url(./Frozen-Characters-Website-4-copy.webp)
-}
-#pizzasMarg {
-  background-color: var(--Marg);
-  background-image: url(./Frozen-Characters-Website-2-copy.webp)
-}
+/* individual pizza squares */
+  .pizzas {
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    height: 500px;
+    margin: 1%;
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+  .pizzaContent {
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    margin: 5px;
+  }
+  .pizzaH4 {
+    color: var(--pale);
+    margin: auto;
+    padding: 5%;
+    font-weight:bold;
+  }
+  #pizzasMEA {
+    background-image: url(./Frozen-Characters-Website-1-copy.webp);
+  }
+  #pizzasMAR {
+    background-image: url(./Frozen-Characters-Website-2-copy.webp);
+  }
+  #pizzasHAM {
+    background-image: url(./Frozen-Characters-Website-3-copy.webp);
+  }
+  #pizzasNAP {
+    background-image: url(./Frozen-Characters-Website-4-copy.webp);
+  }
 
-.pizzaContent {
-  display: flex;
-  flex-direction: column;
-  padding: 5px;
-  margin: 5px;
-}
-#pizzaContentMH {
-  background-color: var(--MHLight);
-}
-#pizzaContentHam {
-  background-color: var(--HamLight);
-}
-#pizzaContentNap {
-  background-color: var(--NapLight);
-}
-#pizzaContentMarg {
-  background-color: var(--MargLight);
-}
-.plus{
-  border-radius: 10px;
-  font-weight: bolder;
-}
-.pizzaTotals {
-  display: flex;
-  flex-direction: column;
-  align-items: end;
-}
-.pizzaH4 {
-  color: var(--pale);
-  margin: auto;
-  padding: 5%;
-  font-weight:bold;
-}
 
-.inventoryBox {
-  border-radius: 10px;
-  display: flex;
-  justify-content: space-between;
-}
+
+/* add pizza '+' square */
+  .addPizza {
+    background-color: var(--light);
+    font-size: xx-large;
+    align-items: center;
+    justify-content: center;
+  }
+  .plus{
+    border-radius: 10px;
+    font-weight: bolder;
+  }
+
+
+
+/* new pizza form */
+  .modal {
+    padding: 20%;
+  }
+  .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+  }
+  .inputBox {
+    width: 80%;
+    padding: 0 3px 0 3px;
+    font-size: small;
+  }
+  .addIngredient {
+    margin-bottom: 13px;
+  }
+  .ingredientList {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--darkLight);
+    margin: 0 30px 20px 30px;
+    font-style: italic;
+  }
+
+
+
+/* inventory display */
+  .pizzaTotals {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+  }
+  .inventoryBox {
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+

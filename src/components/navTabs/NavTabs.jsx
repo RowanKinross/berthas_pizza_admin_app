@@ -27,6 +27,8 @@ function NavTabs({ customerName, setCustomerName }) {
     }
   }
 
+
+  
   // function to get the customer data from firebase
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -111,6 +113,28 @@ function NavTabs({ customerName, setCustomerName }) {
   };
 
 
+// Load user info from localStorage on mount
+useEffect(() => {
+  const storedUserRole = localStorage.getItem('userRole');
+  const storedCustomerName = localStorage.getItem('customerName');
+  if (storedUserRole) setUserRole(storedUserRole);
+  if (storedCustomerName) setCustomerName(storedCustomerName);
+}, []);
+
+// Update localStorage when userRole or customerName changes
+useEffect(() => {
+  if (userRole) {
+    localStorage.setItem('userRole', userRole);
+  } else {
+    localStorage.removeItem('userRole');
+  }
+  if (customerName) {
+    localStorage.setItem('customerName', customerName);
+  } else {
+    localStorage.removeItem('customerName');
+  }
+}, [userRole, customerName]);
+
 
 
 
@@ -125,7 +149,7 @@ function NavTabs({ customerName, setCustomerName }) {
         <div className="loginContainer">
            <p className='loggedInStatement'>{userRole === "customer" ? customerName : userRole === "staff" ? "Bertha's Staff" : null}</p>
            {/* if userRole is staff, set the login statement to 'Berha's Staff', if */}
-          <Button className='button' variant="outline-warning" onClick={() => { setUserRole(null); setCustomerName(null); navigate("/"); location.reload();}}>Logout</Button>
+          <Button className='button' variant="outline-warning" onClick={() => { setUserRole(null); setCustomerName(null);localStorage.clear(); navigate("/"); location.reload();}}>Logout</Button>
         </div>
         ) : (
         <>
