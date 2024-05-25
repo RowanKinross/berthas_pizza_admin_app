@@ -9,7 +9,9 @@
   -moz-osx-font-smoothing: grayscale;
 
   --pale: #fdfdfd;
+  --paleLight: rgb(253, 253, 253, 0.7);
   --dark: #1a1a1a;
+  --grey: #e2e2e2;
   --darkLight: rgb(26, 26, 26, 0.5);
   --bertha: #eee510;
   --MH: #E95742;
@@ -17,7 +19,7 @@
   --Nap: #FCE744;
   --Marg: #88C69A;
 
-  --MHLight: rgb(233, 87, 66, 0.9);
+  --MHLight: #e95a44f2;
   --HamLight: rgb(241, 189, 204, 0.9);
   --NapLight: rgb(252, 231, 68, 0.9);
   --MargLight: rgb(136, 198, 154, 0.9);
