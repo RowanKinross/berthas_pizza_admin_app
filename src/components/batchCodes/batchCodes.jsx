@@ -94,7 +94,7 @@ function BatchCodes() {
           num_pizzas: numPizzas,
           ingredients: ingredients,
           batch_code: batchCode,
-          completed: completed
+          completed: completed,
         });
       setShowForm(false);
       setEditBatch(null);
@@ -123,7 +123,7 @@ function BatchCodes() {
           num_pizzas: numPizzas,
           ingredients: ingredients,
           batch_code: batchCode,
-          completed: completed,
+          completed: completed //!if draft, then incomplete, if submit then complete
         });
       setShowForm(false);
       setEditBatch(null);
@@ -253,7 +253,17 @@ useEffect(() => {
           required
         />
       </Col>
+      <Form.Label column sm={3}>
+        Ingredients Ordered?
+        <input 
+        className='m-2'
+        type="checkbox"
+        name='ingredients_ordered'
+        onChange={handleInputChange}
+        />
+      </Form.Label>
       <div>
+        <button type="button" className='button draft'>Save as draft</button>
         <button type="submit" className='button'>Submit</button>
       </div>
     </form>

@@ -28,19 +28,19 @@
     padding: 5%;
     font-weight:bold;
   }
-  #pizzasMEA {
+  #pizzasMEA_A1 {
     background-image: url(./Frozen-Characters-Website-1-copy.webp);
   }
-  #pizzasMAR {
+  #pizzasMAR_A1 {
     background-image: url(./Frozen-Characters-Website-2-copy.webp);
   }
-  #pizzasHAM {
+  #pizzasHAM_A1 {
     background-image: url(./Frozen-Characters-Website-3-copy.webp);
   }
-  #pizzasNAP {
+  #pizzasNAP_A1 {
     background-image: url(./Frozen-Characters-Website-4-copy.webp);
   }
-  #pizzasROS {
+  #pizzasROS_B1 {
     background-image: url(./pizza_rossa_img.jpg);
   }
 
@@ -102,6 +102,7 @@
     border-radius: 10px;
     display: flex;
     padding: 5px;
+    margin: 2px;
     justify-content: space-evenly;
     color: var(--dark);
     border: dashed 1px var(--dark);
@@ -119,4 +120,8 @@
 }
 .list {
   text-align: start;
+}
+.ingredientDropdown {
+  max-height: 300px; 
+  overflow-y: auto; 
 }

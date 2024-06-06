@@ -87,7 +87,11 @@ const updateIngredientsArr = async (newIngredient) => {
 //ADD TO STORE
 // add pizza function for when user clicks on '+'
   const handleAddPizza = async () => {
-    const ID = (`${pizzaTitle.charAt(0)}${pizzaTitle.charAt(1)}${pizzaTitle.charAt(2)}`).toUpperCase()
+    const vegan = currentPizzaIngredients.includes("45g x Vegan Mozzarella, 1kg Pack")? "B" : "A"
+    const withSleeve = sleeve ? 1 : 0
+    const IDletters = (`${pizzaTitle.charAt(0)}${pizzaTitle.charAt(1)}${pizzaTitle.charAt(2)}`).toUpperCase()
+
+    const ID = `${IDletters}_${vegan}${withSleeve}`
     console.log(ID)
     try {
 
@@ -124,7 +128,7 @@ const handleCancel = () => {
 // function to handle new ingredient inputs
 const handleAddIngredient = () => {
   setAddIngredientForm(false); // hide add ingredient form
-  const newIngredient = `${currentIngredientQuantity} x ${ingredientName}, ${ingredientUnits}`;
+  const newIngredient = `${currentIngredientQuantity}g x ${ingredientName}, ${ingredientUnits}`;
   setCurrentIngredient(newIngredient);
   setTimeout(async () => {
     await updateIngredientsArr(newIngredient);
@@ -183,17 +187,17 @@ return (
               className='pizzas' 
               id={`pizzas${pizza.id}`} 
               key={pizzaIndex} 
-              style={{ backgroundColor: pizza.hex_colour }}
+              style={{ backgroundColor: pizza.sleeve ? pizza.hex_colour : 'transparent', border: pizza.sleeve ? 'transparent' :`2px dotted ${pizza.hex_colour}` }}
               >
-              <div className='pizzaContent' style={{ backgroundColor: `${pizza.hex_colour}f2`}}>
+              <div className='pizzaContent' style={{ backgroundColor: pizza.sleeve? `${pizza.hex_colour}f2`: 'transparent'}}>
                 <div className='pizzaHeader'>
-                  <h4 className='pizzaH4'>{pizza.pizza_title}</h4>
+                  <h4 className='pizzaH4' style={{color: pizza.sleeve ? `#fdfdfd` : `${pizza.hex_colour}` }}>{pizza.pizza_title}</h4>
                 </div>
 
                 {/* Render inventory details for this pizza */}
                 {stock.map((batch, index) => (
                   batch[pizza.id] !== undefined ? (
-                    <div className='inventoryBox' style={{ backgroundColor: pizza.hex_colour}} key={`${pizza.id}-${index}`}>
+                    <div className='inventoryBox' style={{ backgroundColor: pizza.sleeve ? pizza.hex_colour : 'transparent'}} key={`${pizza.id}-${index}`}>
                       <p>Batch Date: {batch.batch_date}</p>
                       <p>Total: {batch[pizza.id]}</p>
                       <p>On order: 0</p>
@@ -244,7 +248,7 @@ return (
               <Dropdown.Toggle className='button' variant="outline-warning" id="dropdown-basic">
                 {currentIngredient? currentIngredient : 'Select Ingredient'}
               </Dropdown.Toggle>
-              <Dropdown.Menu>
+              <Dropdown.Menu className='ingredientDropdown'>
                 {ingredientsArr.map((ingredient, index) => (
                   <Dropdown.Item key={index} onClick={() => {setCurrentIngredient(ingredient)}}>
                     {ingredient}
@@ -301,7 +305,7 @@ return (
               Units: <input type='text' placeholder='e.g 1.8kg Jar' onChange={(e) => setIngredientUnits(e.target.value)} />
             </div>
             <div className='inputBox'>
-              Quantity per Pizza: <input type='number' placeholder='e.g 0.02' onChange={(e) => setCurrentIngredientQuantity(e.target.value)} />
+              Quantity per Pizza (in grams): <input type='number' placeholder='e.g 32' onChange={(e) => setCurrentIngredientQuantity(e.target.value)} />
             </div>
       </Form.Group>
       <Button type="submit" className='button' onClick={() => { handleAddIngredient(); setAddIngredientForm(false)}}>Submit</Button>

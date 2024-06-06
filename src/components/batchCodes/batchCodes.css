@@ -22,3 +22,6 @@
 .inputNumber{
   width: 50px;
 }
+.draft {
+  background-color: var(--grey);
+}
