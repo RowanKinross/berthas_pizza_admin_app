@@ -112,7 +112,8 @@ const handleSubmit = async (event) => {
       pizza_marg: pizzaQuantities.Marg >= 0 ? pizzaQuantities.Marg : 0,
       pizza_nap: pizzaQuantities.Nap >= 0 ? pizzaQuantities.Nap : 0,
       pizzaTotal: totalPizzas,
-      additional_notes: document.getElementById('additonalNotes').value
+      additional_notes: document.getElementById('additonalNotes').value,
+      complete: false
     });
     
     console.log("Document written with ID: ", docRef.id);
@@ -148,7 +149,7 @@ return (
             type="radio"
             label="asap"
             value="asap"
-            name="deliveryDate"
+            name="deliveryOption"
             id="asap"
             checked={deliveryOption === 'asap'}
             onChange={handleOptionChange}
@@ -157,25 +158,25 @@ return (
             type="radio"
             label={`next week (W/C ${nextWeek})`}
             value={nextWeek}
-            name="deliveryDate"
+            name="deliveryOption"
             id="nextWeek"
-            checked={deliveryOption === 'nextWeek'}
+            checked={deliveryOption === `${nextWeek}`}
             onChange={handleOptionChange}
           />
           <Form.Check
             type="radio"
             label={`week after next (W/C ${weekAfterNext})`}
             value={weekAfterNext}
-            name="deliveryDate"
+            name="deliveryOption"
             id="weekAfterNext"
-            checked={deliveryOption === 'weekAfterNext'}
+            checked={deliveryOption === `${weekAfterNext}`}
             onChange={handleOptionChange}
           />
             <Form.Check
             type="radio"
             label="other"
             value="other"
-            name="deliveryDate"
+            name="deliveryOption"
             id="other"
             checked={deliveryOption === 'other'}
             onChange={handleOptionChange}

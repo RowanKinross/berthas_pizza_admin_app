@@ -32,7 +32,7 @@ return (
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="newOrder" element={<NewOrder customerName={customerName}/>} />
-            <Route path="orderHistory" element={<OrderHistory />} />
+            <Route path="orderHistory" element={<OrderHistory customerName={customerName}/>} />
             <Route path="orders" element={<Orders />} />
             <Route path="inventory" element={<Inventory />} />
             <Route path="demandSummary" element={<DemandSummary />} />

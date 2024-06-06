@@ -7,3 +7,7 @@
   display: flex;
   justify-content: space-between;
 }
+.orderButton.complete {
+  background-color: var(--Marg);
+  color: white;
+}

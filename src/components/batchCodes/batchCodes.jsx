@@ -9,6 +9,7 @@ import Row from 'react-bootstrap/Row';
 
 function BatchCodes() {
   const [batches, setBatches] = useState([]);
+  const [pizzas, setPizzas] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editBatch, setEditBatch] = useState(null);
   const [saveNewMode, setSaveNewMode] = useState(true);
@@ -18,6 +19,8 @@ function BatchCodes() {
   const [batchCode, setBatchCode] = useState("");
   const [completed, setCompleted] = useState(false)
   const formRef = useRef(null);
+  const[showBatch, setShowBatch] = useState(false)
+  const[currentBatch, setCurrentBatch] = useState([])
 
 
 
@@ -35,8 +38,21 @@ function BatchCodes() {
         console.error("Error fetching batches:", error);
       }
     };
-
     fetchBatches();
+
+    const fetchPizzas = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "pizzas"));
+        const pizzaData = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setPizzas(pizzaData);
+      } catch (error) {
+        console.error("Error fetching pizzas:", error);
+      }  
+    }
+    fetchPizzas();
   }, []);
 
 
@@ -62,6 +78,12 @@ function BatchCodes() {
     setIngredients(batch.ingredients); // Set ingredients for edit
     setBatchCode(batch.batch_code); // Set batch code for edit
   };
+
+  const handleBatchClick = (batch) => {
+    setShowBatch(true)
+    setCurrentBatch(batch)
+    console.log(currentBatch[0].toString())
+  }
 
   const handleAddFormSubmit = async (e) => {
     e.preventDefault();
@@ -119,6 +141,8 @@ function BatchCodes() {
       console.error("Error submitting batch:", error);
     }
   };
+
+
 
  // Handle input changes for both new and edit forms
  const handleInputChange = (e) => {
@@ -185,18 +209,30 @@ useEffect(() => {
       <Form.Label column sm={3}>
         Number of Pizzas:
       </Form.Label>
+      <div> 
       <Col sm={9}>
-        <input
-          type="number"
-          name="num_pizzas"
-          value={numPizzas}
-          onChange={handleInputChange}
-          required
-        />
+      {pizzas.map((pizza, index) => (
+                <div key={index} className='container'>
+                  {pizza.pizza_title}
+                  <input 
+                  className='inputNumber'
+                  type="number"
+                  name="quantity"
+                  placeholder='0'
+                  onChange={handleInputChange}
+                  />
+                </div>
+              ))}
       </Col>
+      </div>
       <Form.Label column sm={3}>
         Ingredients:
       </Form.Label>
+      {/* add logic for list ingredients needed according to the pizza numbers
+        
+
+
+      */}
       <Col sm={9}>
         <textarea
           name="ingredients"
@@ -224,13 +260,21 @@ useEffect(() => {
 )}
 
 
+{showBatch && (
+  <>
+  <h2>Batch Code: </h2>
+  <p>No of Pizzas: 
+    {currentBatch[0]} </p>
+  </>
+)}
+
     <div className='ordersList'>
       <div className='orderButton'>
         <div>Batch Date: </div>
       </div>
       {batches.map(batch => (
         <div key={batch.id} className='batchDiv'>
-          <div className='batchText'>{batch.batch_date}</div>
+          <button className='batchText button' onClick={() => handleBatchClick(batch)}>{batch.batch_date}</button>
           <button className='button'onClick={() => handleEditClick(batch)}>edit</button>
       </div>
       ))}

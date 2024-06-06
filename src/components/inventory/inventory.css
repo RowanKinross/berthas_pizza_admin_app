@@ -71,9 +71,8 @@
     align-items: end;
   }
   .inputBox {
-    width: 80%;
-    padding: 0 3px 0 3px;
     font-size: small;
+    margin-bottom: 3px !important;
   }
   .addIngredient {
     margin-bottom: 13px;
@@ -113,3 +112,11 @@
   }
 
 
+/* ingredients list */
+.listContainer {
+  display: flex;
+  justify-content: center;
+}
+.list {
+  text-align: start;
+}
