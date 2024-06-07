@@ -102,6 +102,7 @@ function BatchCodes() {
       setNumPizzas(0);
       setIngredients("");
       setBatchCode("");
+      setSaveNewMode(false)
       const querySnapshot = await getDocs(collection(db, "batches"));
       const batchesData = querySnapshot.docs.map(doc => ({
         id: doc.id,
@@ -123,7 +124,7 @@ function BatchCodes() {
           num_pizzas: numPizzas,
           ingredients: ingredients,
           batch_code: batchCode,
-          completed: completed //!if draft, then incomplete, if submit then complete
+          completed: completed //if draft, then incomplete, if submit then complete
         });
       setShowForm(false);
       setEditBatch(null);
@@ -193,7 +194,7 @@ useEffect(() => {
     <button className='button' onClick={handleAddClick}>+</button>
 
 {showForm && (
-    <form ref={formRef} onSubmit={(e) => {e.preventDefault(); if (saveNewMode) {handleAddFormSubmit(e)} else {handleEditFormSubmit(e)}}} className='editForm' as={Row}>
+    <form ref={formRef} onSubmit={(e) => {e.preventDefault(); {handleEditFormSubmit(e)}}} className='editForm' as={Row}>
       <Form.Label column sm={3}>
         Batch Date:
       </Form.Label>
@@ -262,34 +263,44 @@ useEffect(() => {
         onChange={handleInputChange}
         />
       </Form.Label>
-      <div>
-        <button type="button" className='button draft'>Save as draft</button>
-        <button type="submit" className='button'>Submit</button>
+        {saveNewMode ? 
+        <div>
+          <button type="button" className='button draft' onClick={handleAddFormSubmit}>Save as draft</button> 
+        </div>
+        :
+      <div className='container'>
+        <div>
+          <button type="button" className='button draft' onClick={handleEditFormSubmit}>Save draft</button>
+          <button type="submit" className='button'>Submit</button>
+        </div>
+          <button type="button" className='button draft' onClick={handleDeleteForm}>delete</button>
       </div>
+        }
     </form>
 )}
 
-
-{showBatch && (
-  <>
-  <h2>Batch Code: </h2>
-  <p>No of Pizzas: 
-    {currentBatch[0]} </p>
-  </>
-)}
-
-    <div className='ordersList'>
-      <div className='orderButton'>
-        <div>Batch Date: </div>
-      </div>
-      {batches.map(batch => (
-        <div key={batch.id} className='batchDiv'>
-          <button className='batchText button' onClick={() => handleBatchClick(batch)}>{batch.batch_date}</button>
-          <button className='button'onClick={() => handleEditClick(batch)}>edit</button>
-      </div>
-      ))}
-    </div>
+<div>
+  <div className='batchText batchHeader container' >
+    <p>Batch Date:</p>
+    <p>Number of pizzas:</p>
+    <p>Ingredients Ordered?</p>
   </div>
+</div>
+
+
+  {batches
+    .sort((a, b) => new Date(a.batch_date) - new Date(b.batch_date))
+    .map(batch => (
+      <div key={batch.id} className='batchDiv'>
+        <button className='batchText button container' onClick={() => handleBatchClick(batch)}>
+          <p>{batch.batch_date}</p>
+          <p>{batch.num_pizzas}</p>
+          {batch.ingredients_ordered ? <p>✓</p> : <p>✘</p>}
+        </button>
+        <button className='button' onClick={() => handleEditClick(batch)}>edit</button>
+      </div>
+    ))}
+</div>
 
 
   )

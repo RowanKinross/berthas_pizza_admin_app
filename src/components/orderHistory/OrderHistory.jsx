@@ -24,7 +24,6 @@ const OrderHistory = ({ customerName }) => {
           ...doc.data()
         }));
         setOrders(ordersData);
-        console.log(ordersData)
       } catch (error) {
         console.error("Error fetching orders:", error);
       }
@@ -42,20 +41,21 @@ const handleCloseModal = () => {
   <div className='orders'>
     <h2>ORDERS</h2>
     <div className='ordersList'>
-      <div className='orderButton'>
-        <div>Account ID</div>
-        <div>no. of pizzas</div>
-        <div>Delivery Date</div>
+      <div className='orderButton orderHeaders'>
+        <div>Order Placed:</div>
+        <div>No. of Pizzas:</div>
+        <div>Delivery Week:</div>
       </div>
       {orders
-        .filter(order => order.customer_name === customerName) // Filter orders by customer_name
+        .filter(order => order.customer_name === customerName)
+        .sort((a, b) => a.timestamp.seconds - b.timestamp.seconds)
         .map(order => (
           <button 
             key={order.id} 
             className={`orderButton button ${order.complete ? 'complete' : ''}`}>
-              <div>{order.account_ID}</div>
-              <div>{order.pizzaTotal}</div>
-              <div>{order.delivery_date}</div>
+              <div className='entries'>{order.timestamp.toDate().toLocaleString()}</div>
+              <div className='entries'>{order.pizzaTotal}</div>
+              <div className='entries'>{order.delivery_date}</div>
           </button>
         ))}
     </div>
@@ -68,7 +68,7 @@ const handleCloseModal = () => {
           <div>
             <p><strong>Account ID:</strong> {selectedOrder.account_ID}</p>
             <p><strong>No. of Pizzas:</strong> {selectedOrder.pizzaTotal}</p>
-            <p><strong>Delivery Date:</strong> {selectedOrder.delivery_date}</p>
+            <p><strong>Delivery Week:</strong> {selectedOrder.delivery_date}</p>
           </div>
           <div>
             <button className='button' onClick={handleCloseModal}>

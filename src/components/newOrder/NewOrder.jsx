@@ -16,7 +16,7 @@ const [pizzaQuantities, setPizzaQuantities] = useState({});
 const [totalPizzas, setTotalPizzas] = useState(0)
 const [additionalNotes, setAdditionalNotes] = useState("...");
 const [pizzaData, setPizzaData] = useState([]);
-const [filterCriteria, setFilterCriteria] = useState("all");
+const [filterCriteria, setFilterCriteria] = useState("withSleeve");
 
 const capitalizeWords = (str) => {
   return str.toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
@@ -130,15 +130,17 @@ const handleSubmit = async (event) => {
   setValidated(true);
 //send to database
   try {
+    const pizzas = filteredPizzaData.reduce((acc, pizza) => {
+      acc[pizza.id] = pizzaQuantities[pizza.id] >= 0 ? pizzaQuantities[pizza.id] : 0;
+      return acc;
+    }, {});
+
     const docRef = await addDoc(collection(db, "orders"), {
       timestamp: serverTimestamp(),
       delivery_date: deliveryOption === 'other' ? ("custom:" + customDeliveryDate) : deliveryOption,
       account_ID: (`#${customerName.toUpperCase()}`),
       customer_name: customerName,
-      pizza_ham: pizzaQuantities.Ham >= 0 ? pizzaQuantities.Ham : 0,
-      pizza_MH: pizzaQuantities.MH >= 0 ? pizzaQuantities.MH : 0,
-      pizza_marg: pizzaQuantities.Marg >= 0 ? pizzaQuantities.Marg : 0,
-      pizza_nap: pizzaQuantities.Nap >= 0 ? pizzaQuantities.Nap : 0,
+      pizzas,
       pizzaTotal: totalPizzas,
       additional_notes: document.getElementById('additonalNotes').value,
       complete: false
@@ -170,7 +172,7 @@ return (
       <fieldset>
       <Form.Group as={Row} className="mb-3">
         <Form.Label as="legend" column sm={2}>
-          <h5> Delivery date:</h5>
+          <h5> Delivery Week:</h5>
         </Form.Label>
         <Col sm={10}>
           <Form.Check
@@ -222,8 +224,6 @@ return (
     </fieldset>
       <Form.Label><h5> Pizzas: </h5></Form.Label>
     <fieldset>
-
-
     <Form.Group as={Row} className="mb-3">
 
         <Col sm={9}>
@@ -271,9 +271,10 @@ return (
           </Col>
         </Form.Group>
       ))}
-    
+      Total Pizzas: {totalPizzas}
       </fieldset>
-    
+      
+      <fieldset>
       <Form.Group as={Row} className="mb-3" controlId="additonalNotes">
       <Form.Label column sm={3}>
       <h5> Additional Notes:</h5>
@@ -286,9 +287,10 @@ return (
         value={additionalNotes}
         name="additionalNotes"
         onChange={handleChange}
-      />
+        />
       </Col>
     </Form.Group>
+    </fieldset>
     
     <Form.Group className="mb-3">
       <Form.Check
