@@ -101,8 +101,6 @@
   .inventoryBox {
     border-radius: 10px;
     display: flex;
-    padding: 5px;
-    margin: 2px;
     justify-content: space-evenly;
     color: var(--dark);
     border: dashed 1px var(--dark);

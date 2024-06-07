@@ -20,7 +20,7 @@ function Inventory() {
   const [ingredientUnits, setIngredientUnits] = useState('');
   const [addIngredientForm, setAddIngredientForm] = useState(false) // set ingredients form to not show
   const [currentIngredient, setCurrentIngredient] = useState('')
-  const [currentPizzaIngredients, setCurrentPizzaIngredients] = useState([])
+  const [currentPizzaIngredients, setCurrentPizzaIngredients] = useState(["160g x Flour (Caputo Red), 15kg Bag", "4.8g x Salt, 1kg"])
  
 
 
@@ -33,7 +33,13 @@ function Inventory() {
     const fetchPizzaData = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, 'pizzas'));
-        const data = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const data = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data()}));
+        data.sort((a, b) => {
+          if (a.sleeve === b.sleeve) {
+            return a.id.localeCompare(b.id);
+          }
+          return a.sleeve ? -1 : 1;
+        });
         setPizzaData(data);
       } catch (error) {
         console.error("Error fetching pizza data:", error); // Debugging statement
@@ -105,6 +111,7 @@ const updateIngredientsArr = async (newIngredient) => {
       fetchPizzaData();
       closeModal();
       updateIngredientsArr()
+      setCurrentPizzaIngredients(["160g x Flour (Caputo Red), 15kg Bag", "4.8g x Salt, 1kg"])
     } catch (e) {
       console.error("Error adding document: ", e);
     }
@@ -119,7 +126,7 @@ const closeModal = () => {
 };
 const handleCancel = () => {
   closeModal();
-  setCurrentPizzaIngredients([]);
+  setCurrentPizzaIngredients(["160g x Flour (Caputo Red), 15kg Bag", "4.8g x Salt, 1kg"]);
   setCurrentIngredient('')
 };
 

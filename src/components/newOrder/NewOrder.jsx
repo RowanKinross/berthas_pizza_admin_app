@@ -6,53 +6,84 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import dayjs from 'dayjs';
 import { app, db } from '../firebase/firebase';
-import { addDoc, collection, serverTimestamp } from '@firebase/firestore';
+import { addDoc, getDocs, collection, serverTimestamp } from '@firebase/firestore';
 
 
 
 function  NewOrder({customerName}) {
-  // // function to get the customer data from firebase
-  // useEffect(() => {
-  //  const fetchCustomers = async () => {
-  //    try {
-  //      const querySnapshot = await getDocs(collection(db, "customers"));
-  //      const customersData = querySnapshot.docs.map(doc => ({
-  //        id: doc.id,
-  //        ...doc.data()
-  //      }));
-  //      const customers = customersData.map(item => item.customer)
-  //      const customerObjIndex = customers.indexOf(customerName)
-  //      console.log(customerObjIndex)
-  //    } catch (error) {
-  //      console.error("Error fetching customers:", error);
-  //    }
-  //  };
-  //  fetchCustomers();
-  // }, []);
 
-  const [pizzaQuantities, setPizzaQuantities] = useState({
-    Ham: 0,
-    MH: 0,
-    Marg: 0,
-    Nap: 0
-  });
-  const [totalPizzas, setTotalPizzas] = useState(0)
-  
+const [pizzaQuantities, setPizzaQuantities] = useState({});
+const [totalPizzas, setTotalPizzas] = useState(0)
+const [additionalNotes, setAdditionalNotes] = useState("...");
+const [pizzaData, setPizzaData] = useState([]);
+const [filterCriteria, setFilterCriteria] = useState("all");
+
+const capitalizeWords = (str) => {
+  return str.toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
+};
+const handleFilterChange = (event) => {
+  setFilterCriteria(event.target.value);
+};
+
+// function to get the pizza data from firebase
+  useEffect(() => {
+   const fetchPizzas = async () => {
+     try {
+       const querySnapshot = await getDocs(collection(db, "pizzas"));
+       const fetchedPizzaData = querySnapshot.docs.map(doc => ({
+         id: doc.id,
+         ...doc.data()
+       }));
+       fetchedPizzaData.sort((a, b) => {
+        if (a.sleeve === b.sleeve) {
+          return a.id.localeCompare(b.id);
+        }
+        return a.sleeve ? -1 : 1;
+      });
+       setPizzaData(fetchedPizzaData);
+     } catch (error) {
+       console.error("Error fetching pizzas:", error);
+     }
+   };
+   fetchPizzas();
+  }, []);
+
+  useEffect(() => {
+    // Initialize pizzaQuantities based on pizzaData
+    const initialQuantities = pizzaData.reduce((acc, pizza) => {
+      acc[pizza.id] = 0;
+      return acc;
+    }, {});
+    setPizzaQuantities(initialQuantities);
+  }, [pizzaData]);
+
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     if (name === "additionalNotes") {
       setAdditionalNotes(value);
     } else {
-    setPizzaQuantities(prevState => ({
-      ...prevState,
-      [name]: parseInt(value)
-    }));
-    const total = Object.values(pizzaQuantities).reduce((acc, curr) => acc + curr, 0);
-    setTotalPizzas(total)
+      setPizzaQuantities(prevState => {
+        const updatedQuantities = {
+          ...prevState,
+          [name]: parseInt(value, 10)
+        };
+        const total = Object.values(updatedQuantities).reduce((acc, curr) => acc + curr, 0);
+        setTotalPizzas(total);
+        return updatedQuantities;
+      });
     }
   }
   
-  
+  const filteredPizzaData = pizzaData.filter(pizza => {
+    if (filterCriteria === "withSleeve") {
+      return pizza.sleeve;
+    } else if (filterCriteria === "withoutSleeve") {
+      return !pizza.sleeve;
+    } else {
+      return true;
+    }
+  });
   
   // delivery dates
   const today = dayjs().format('DD-MMM-YYYY');
@@ -79,9 +110,6 @@ function  NewOrder({customerName}) {
       setCustomDeliveryDate("");
     }
   };
-
-   // State to store the selected delivery option
-  const [additionalNotes, setAdditionalNotes] = useState("...");
 
 
 
@@ -195,66 +223,54 @@ return (
       <Form.Label><h5> Pizzas: </h5></Form.Label>
     <fieldset>
 
-    <Form.Group as={Row} className="mb-3" id='MH'>
-      <Form.Label column sm={3}>
-        Meat and Heat
-      </Form.Label>
-      <Col sm={9}>
-        <Form.Control
-          type="number"
-          placeholder="0"
-          value={pizzaQuantities.MH}
-          name="MH"
-          onChange={handleChange}
-        />
-      </Col>
-    </Form.Group>
-    
-    <Form.Group as={Row} className="mb-3" id='Ham'>
-      <Form.Label column sm={3}>
-        Ham
-      </Form.Label>
-      <Col sm={9}>
-        <Form.Control
-          type="number"
-          placeholder="0"
-          value={pizzaQuantities.Ham}
-          name="Ham"
-          onChange={handleChange}
-        />
-      </Col>
-    </Form.Group>
 
-    <Form.Group as={Row} className="mb-3" id='Marg'>
-      <Form.Label column sm={3}>
-        Margherita
-      </Form.Label>
-      <Col sm={9}>
-        <Form.Control
-          type="number"
-          placeholder="0"
-          value={pizzaQuantities.Marg}
-          name="Marg"
-          onChange={handleChange}
-        />
-      </Col>
+    <Form.Group as={Row} className="mb-3">
+
+        <Col sm={9}>
+          <Form.Check 
+            type="radio" 
+            label="With Sleeve" 
+            value="withSleeve" 
+            checked={filterCriteria === "withSleeve"} 
+            onChange={handleFilterChange} 
+            inline 
+          />
+          <Form.Check 
+            type="radio" 
+            label="Without Sleeve" 
+            value="withoutSleeve" 
+            checked={filterCriteria === "withoutSleeve"} 
+            onChange={handleFilterChange} 
+            inline 
+          />
+          <Form.Check 
+            type="radio" 
+            label="All Pizzas" 
+            value="all" 
+            checked={filterCriteria === "all"} 
+            onChange={handleFilterChange} 
+            inline 
+          />
+        </Col>
       </Form.Group>
 
-    <Form.Group as={Row} className="mb-3" id='Nap'>
-      <Form.Label column sm={3}>
-        Napoli
-      </Form.Label>
-      <Col sm={9}>
-        <Form.Control
-          type="number"
-          placeholder="0"
-          value={pizzaQuantities.Nap}
-          name="Nap"
-          onChange={handleChange}
-        />
-      </Col>
-    </Form.Group>
-    <p>Total Pizzas: {totalPizzas}</p>
+
+      {filteredPizzaData.map(pizza => (
+        <Form.Group as={Row} className="mb-3" key={pizza.id} id={pizza.id}>
+          <Form.Label column sm={3}>
+            {capitalizeWords(pizza.pizza_title)}  {/* Capitalizing each word in the pizza title */}
+          </Form.Label>
+          <Col sm={9}>
+            <Form.Control
+              type="number"
+              placeholder="0"
+              value={pizzaQuantities[pizza.id] || 0}
+              name={pizza.id}
+              onChange={handleChange}
+            />
+          </Col>
+        </Form.Group>
+      ))}
     
       </fieldset>
     
